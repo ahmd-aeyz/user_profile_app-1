@@ -1,4 +1,5 @@
-import 'package:final_project/features/profile/domain/entities/profile.dart';
+import 'dart:io';
+import 'package:final_project/core/domain/usecases/usecase.dart';
 import 'package:final_project/features/profile/domain/usecases/edit_profile.dart';
 import 'package:final_project/features/profile/domain/usecases/view_profile.dart';
 import 'package:final_project/features/profile/presentation/bloc/profile_state.dart';
@@ -7,35 +8,43 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit({
-    required this.viewUseCase,
-    required this.editUseCase,
-  }) : super(const ProfileInitial());
-  ViewProfile viewUseCase;
-  EditProfile editUseCase;
+  ProfileCubit(
+    this._viewUserCase,
+    this._editUseCase,
+  ) : super(const ProfileInitial());
+  final ViewProfile _viewUserCase;
+  final EditProfile _editUseCase;
 
-  Future<void> viewProfile({
-    required String token,
-  }) async {
+  Future<void> viewProfile() async {
     emit(const ProfileLoading());
-    final result = await viewUseCase(ViewProfileData(token: token));
+    final result = await _viewUserCase(NoParams());
     emit(
       result.fold(
         (error) => ProfileErrorDetails(error.toString()),
-        (profile) => ProfileSuccess(profile),
+        (user) => ProfileSuccess(user),
       ),
     );
   }
 
   Future<void> editProfile({
-    required String token,
-    required Profile profile,
+    required String name,
+    required String email,
+    required String password,
+    required String phone,
+    File? imageFile,
+    String? address,
+    int? age,
   }) async {
     emit(const ProfileState.loading());
-    final result = await editUseCase(
+    final result = await _editUseCase(
       EditProfileData(
-        token: token,
-        profile: profile,
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        imageFile: imageFile,
+        address: address,
+        age: age,
       ),
     );
     result.fold(

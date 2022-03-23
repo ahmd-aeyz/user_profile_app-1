@@ -5,9 +5,20 @@ import 'package:final_project/features/profile/presentation/widgets/profile_item
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ViewProfileScreen extends StatelessWidget {
+class ViewProfileScreen extends StatefulWidget {
   const ViewProfileScreen();
-  static const routeName = '/view_profile';
+  static const routeName = 'view_profile';
+  @override
+  State<ViewProfileScreen> createState() => _ViewProfileScreenState();
+}
+
+class _ViewProfileScreenState extends State<ViewProfileScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<ProfileCubit>(context).viewProfile();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,30 +30,32 @@ class ViewProfileScreen extends StatelessWidget {
           return state.maybeWhen(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error) => Center(child: Text(error)),
-            success: (profile) {
+            success: (user) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ProfileImageWidget(profile.imageUrl),
+                  ProfileImageWidget(
+                    user.imageUrl,
+                  ),
                   Text(
-                    profile.name,
+                    user.name,
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   ProfileItemWidget(
-                    text: profile.email,
+                    text: user.email,
                     icon: Icons.email_outlined,
                   ),
                   ProfileItemWidget(
-                    text: profile.password,
-                    icon: Icons.lock_outline,
-                  ),
-                  ProfileItemWidget(
-                    text: profile.phone,
+                    text: user.phone ?? '',
                     icon: Icons.phone_outlined,
                   ),
                   ProfileItemWidget(
-                    text: profile.job,
-                    icon: Icons.account_circle_outlined,
+                    text: user.address ?? '',
+                    icon: Icons.home_work_outlined,
+                  ),
+                  ProfileItemWidget(
+                    text: '${user.age ?? ''}',
+                    icon: Icons.home_work_outlined,
                   ),
                 ],
               );

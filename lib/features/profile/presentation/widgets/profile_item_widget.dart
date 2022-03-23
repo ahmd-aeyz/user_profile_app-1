@@ -1,4 +1,4 @@
-import 'package:final_project/core/theme/colors.dart';
+import 'package:final_project/core/presentation/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class ProfileItemWidget extends StatelessWidget {
