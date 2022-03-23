@@ -1,37 +1,74 @@
 import 'package:final_project/features/profile/domain/entities/profile.dart';
 
-class ProfileModel extends Profile {
-  const ProfileModel({
-    required String name,
-    required String email,
-    required String password,
-    required String phone,
-    required String imageUrl,
-    required String job,
-  }) : super(
-          name: name,
-          email: email,
-          password: password,
-          phone: phone,
-          imageUrl: imageUrl,
-          job: job,
-        );
+class ProfileData {
+  final int? id;
+  final String name;
+  final String email;
+  final String? imageUrl;
+  final String? emailVerifiedAt;
+  final String? address;
+  final String phone;
+  final int? age;
+  final int? role;
+  final String? updatedAt;
+  final String? createdAt;
+
+  ProfileData({
+    this.id,
+    required this.name,
+    required this.email,
+    this.imageUrl,
+    this.emailVerifiedAt,
+    this.address,
+    required this.phone,
+    this.age,
+    this.role,
+    this.updatedAt,
+    this.createdAt,
+  });
+
+  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
+        id: json['id'] as int,
+        name: json['name'] as String,
+        email: json['email'] as String,
+        imageUrl: json['image'] as String,
+        emailVerifiedAt: json['email_verified_at'] as String?,
+        address: json['address'] as String?,
+        phone: json['phone'] as String,
+        age: json['age'] as int?,
+        role: json['role'] as int?,
+        createdAt: json['created_at'] as String,
+        updatedAt: json['updated_at'] as String,
+      );
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'email': email,
-        'password': password,
+        'image': imageUrl,
+        'address': address,
         'phone': phone,
-        'imageUrl': imageUrl,
-        'job': job,
+        'age': age,
       };
+}
+
+class ProfileModel extends Profile {
+  final ProfileData profileData;
+  final String message;
+  final int status;
+  ProfileModel({
+    required this.profileData,
+    required this.message,
+    required this.status,
+  }) : super(
+          name: profileData.name,
+          email: profileData.email,
+          phone: profileData.phone,
+          imageUrl: profileData.imageUrl!,
+        );
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-        name: json['name'] as String,
-        email: json['email'] as String,
-        password: json['password'] as String,
-        phone: json['phone'] as String,
-        imageUrl: json['imageUrl'] as String,
-        job: json['job'] as String,
+        profileData: ProfileData.fromJson(json['data'] as Map<String, dynamic>),
+        message: json['message'] as String,
+        status: json['status'] as int,
       );
 }

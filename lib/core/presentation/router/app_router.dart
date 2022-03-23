@@ -1,4 +1,4 @@
-import 'package:final_project/core/di/injectable.dart';
+import 'package:final_project/core/domain/di/injectable.dart';
 import 'package:final_project/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:final_project/features/auth/presentation/screens/register_screen.dart';

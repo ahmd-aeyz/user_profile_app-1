@@ -1,27 +1,44 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/core/error/failure.dart';
+import 'package:final_project/core/data/model/user_model.dart';
+import 'package:final_project/core/domain/datasources/local_datasource.dart';
+import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/features/auth/data/datasources/auth_service.dart';
-import 'package:final_project/features/auth/domain/entities/user.dart';
 import 'package:final_project/features/auth/domain/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: AuthRepository)
-class AuthRepositoryImpl extends AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
   AuthService authService;
-  AuthRepositoryImpl(this.authService);
+  LocalDataSource localDataSource;
+  AuthRepositoryImpl({
+    required this.authService,
+    required this.localDataSource,
+  });
 
   @override
-  Future<Either<Failure, User>> register() async {
+  Future<Either<Failure, Token>> register({
+    required String email,
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
     try {
-      final user = await authService.register();
-      return right(user as User);
+      final token = await authService.register(
+        name: name,
+        email: email,
+        password: password,
+        passwordConfirmation: password,
+        phone: phone,
+      );
+      localDataSource.saveToken(token.accessToken);
+      return right(token);
     } catch (error) {
       return left(Failure(error));
     }
   }
 
   @override
-  Future<Either<Failure, User>> login({
+  Future<Either<Failure, Token>> login({
     required String email,
     required String password,
   }) async {
@@ -30,7 +47,8 @@ class AuthRepositoryImpl extends AuthRepository {
         email: email,
         password: password,
       );
-      return right(user as User);
+      localDataSource.saveToken(user.accessToken);
+      return right(user);
     } catch (error) {
       return left(Failure(error));
     }

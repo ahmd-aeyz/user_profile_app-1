@@ -1,6 +1,7 @@
-import 'package:final_project/core/validation/validators.dart';
-import 'package:final_project/core/widgets/custom_elevated_button.dart';
-import 'package:final_project/core/widgets/custom_text_form_field.dart';
+import 'package:final_project/core/presentation/validation/validators.dart';
+import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
+import 'package:final_project/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:final_project/core/presentation/widgets/password_text_form_field.dart';
 import 'package:final_project/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:final_project/features/auth/presentation/bloc/auth_state.dart';
 import 'package:final_project/features/auth/presentation/screens/login_screen.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen();
-  static const routeName = '/register';
+  static const routeName = 'register';
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -20,10 +21,11 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,13 +51,7 @@ class RegisterScreen extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) => emailValidator(value),
               ),
-              CustomTextFormField(
-                controller: passwordController,
-                hintText: 'Password',
-                prefixIcon: Icons.lock_outlined,
-                keyboardType: TextInputType.visiblePassword,
-                validator: (value) => passwordValidator(value),
-              ),
+              PasswordTextFormField(controller: passwordController),
               CustomTextFormField(
                 controller: phoneController,
                 hintText: 'Phone number',
@@ -76,13 +72,16 @@ class RegisterScreen extends StatelessWidget {
                   return state.maybeWhen(
                     orElse: () => CustomElevatedButton(
                       label: 'register',
-                      onPressed: () =>
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
                           BlocProvider.of<AuthCubit>(context).register(
-                        name: nameController.text,
-                        email: emailController.text,
-                        password: passwordController.text,
-                        phone: phoneController.text,
-                      ),
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            phone: phoneController.text,
+                          );
+                        }
+                      },
                     ),
                   );
                 },
