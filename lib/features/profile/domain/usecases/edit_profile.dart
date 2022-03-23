@@ -1,13 +1,14 @@
+import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:final_project/core/error/failure.dart';
-import 'package:final_project/core/usecases/usecase.dart';
+import 'package:final_project/core/domain/error/failure.dart';
+import 'package:final_project/core/domain/usecases/usecase.dart';
 import 'package:final_project/features/profile/domain/entities/profile.dart';
 import 'package:final_project/features/profile/domain/repositories/profile_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class EditProfile extends UseCase<Profile, EditProfileData> {
+class EditProfile implements UseCase<Profile, EditProfileData> {
   ProfileRepository profileRepository;
   EditProfile(this.profileRepository);
 
@@ -15,24 +16,36 @@ class EditProfile extends UseCase<Profile, EditProfileData> {
   Future<Either<Failure, Profile>> call(
     EditProfileData editProfileData,
   ) async =>
-      profileRepository.editProfile(
-        token: editProfileData.token,
-        updatedProfile: editProfileData.profile,
-      );
+      profileRepository.editProfile(editProfileData);
 }
 
 class EditProfileData extends Equatable {
-  final String token;
-  final Profile profile;
+  final String name;
+  final String email;
+  final String password;
+  final String phone;
+  final File? imageFile;
+  final String? address;
+  final int? age;
 
   const EditProfileData({
-    required this.token,
-    required this.profile,
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.phone,
+    this.imageFile,
+    this.address,
+    this.age,
   });
 
   @override
   List<Object?> get props => [
-        token,
-        profile,
+        name,
+        email,
+        password,
+        phone,
+        imageFile,
+        address,
+        age,
       ];
 }

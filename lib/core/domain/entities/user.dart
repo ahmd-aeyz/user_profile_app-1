@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 
-class Profile extends Equatable {
+class User extends Equatable {
   final String name;
   final String email;
-  final String imageUrl;
-  final String? phone;
+  final String phone;
   final String? address;
+  final String? imageUrl;
   final int? age;
 
-  const Profile({
+  const User({
     required this.name,
     required this.email,
-    required this.imageUrl,
-    this.phone,
+    required this.phone,
     this.address,
+    this.imageUrl,
     this.age,
   });
 
@@ -22,8 +22,8 @@ class Profile extends Equatable {
         name,
         email,
         phone,
-        imageUrl,
         address,
+        imageUrl,
         age,
       ];
 }

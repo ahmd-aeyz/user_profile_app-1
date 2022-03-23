@@ -6,12 +6,12 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({
-    required this.registerUseCase,
-    required this.loginUseCase,
-  }) : super(const AuthInitial());
-  Register registerUseCase;
-  Login loginUseCase;
+  AuthCubit(
+    this._registerUserCase,
+    this._loginUseCase,
+  ) : super(const AuthInitial());
+  final Register _registerUserCase;
+  final Login _loginUseCase;
 
   Future<void> register({
     required String name,
@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String phone,
   }) async {
     emit(const AuthLoading());
-    final result = await registerUseCase(
+    final result = await _registerUserCase(
       RegisterData(
         name: name,
         email: email,
@@ -32,7 +32,6 @@ class AuthCubit extends Cubit<AuthState> {
       result.fold(
         (error) => AuthErrorDetails(error.toString()),
         (user) {
-          // save token
           return const AuthSuccess();
         },
       ),
@@ -44,7 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     emit(const AuthLoading());
-    final result = await loginUseCase(
+    final result = await _loginUseCase(
       LoginData(
         email: email,
         password: password,
@@ -54,7 +53,6 @@ class AuthCubit extends Cubit<AuthState> {
       result.fold(
         (error) => AuthErrorDetails(error.toString()),
         (user) {
-          // save token
           return const AuthSuccess();
         },
       ),
