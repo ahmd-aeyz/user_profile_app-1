@@ -9,8 +9,11 @@ abstract class AuthRepository {
     required String password,
     required String phone,
   });
+
   Future<Either<Failure, Token>> login({
     required String email,
     required String password,
   });
+
+  Future<Either<Failure, void>> logout();
 }

@@ -33,7 +33,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String phone,
     File? imageFile,
     String? address,
-    int? age,
+    String? age,
   }) async {
     emit(const ProfileState.loading());
     final result = await _editUseCase(

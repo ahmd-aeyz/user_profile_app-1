@@ -29,8 +29,15 @@ mixin AppRouter {
         );
       case ViewProfileScreen.routeName:
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => getIt<ProfileCubit>(),
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<ProfileCubit>(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<AuthCubit>(),
+              ),
+            ],
             child: const ViewProfileScreen(),
           ),
         );
@@ -38,8 +45,9 @@ mixin AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: EditProfileScreen(),
+            child: const EditProfileScreen(),
           ),
+          settings: routeSettings,
         );
       default:
         return null;

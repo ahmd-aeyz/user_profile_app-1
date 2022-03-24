@@ -1,5 +1,10 @@
+import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
+import 'package:final_project/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:final_project/features/auth/presentation/screens/login_screen.dart';
+import 'package:final_project/features/auth/presentation/widgets/logout_widget.dart';
 import 'package:final_project/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:final_project/features/profile/presentation/bloc/profile_state.dart';
+import 'package:final_project/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:final_project/features/profile/presentation/widgets/profile_image_widget.dart';
 import 'package:final_project/features/profile/presentation/widgets/profile_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +28,15 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('View profile'),
+        title: const Text('Profile'),
+        actions: [
+          LogoutWidget(
+            onPressed: () {
+              BlocProvider.of<AuthCubit>(context).logout();
+              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
@@ -54,8 +67,19 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                     icon: Icons.home_work_outlined,
                   ),
                   ProfileItemWidget(
-                    text: '${user.age ?? ''}',
-                    icon: Icons.home_work_outlined,
+                    text: user.age ?? '',
+                    icon: Icons.manage_accounts_outlined,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22),
+                    child: CustomElevatedButton(
+                      label: 'edit',
+                      onPressed: () => Navigator.of(context).pushNamed(
+                        EditProfileScreen.routeName,
+                        arguments: user,
+                      ),
+                    ),
                   ),
                 ],
               );

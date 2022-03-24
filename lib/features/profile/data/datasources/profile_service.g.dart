@@ -42,20 +42,17 @@ class _ProfileService implements ProfileService {
     final _data = <String, dynamic>{};
     _data.addAll(profileData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ProfileModel>(Options(
-                method: 'POST',
-                headers: _headers,
-                extra: _extra,
-                contentType: 'multipart/form-data')
-            .compose(_dio.options, 'edit_user',
-                queryParameters: queryParameters, data: _data)
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+        _setStreamType<ProfileModel>(
+            Options(method: 'POST', headers: _headers, extra: _extra)
+                .compose(_dio.options, 'edit_user',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ProfileModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<String> updateImage(
+  Future<ImageModel> updateImage(
       {key = 'ad54db45a510342fbfef1568797bf4fd', required image}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'key': key};
@@ -66,15 +63,16 @@ class _ProfileService implements ProfileService {
         'image',
         MultipartFile.fromFileSync(image.path,
             filename: image.path.split(Platform.pathSeparator).last)));
-    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
-            method: 'POST',
-            headers: _headers,
-            extra: _extra,
-            contentType: 'multipart/form-data')
-        .compose(_dio.options, 'https://api.imgbb.com/1/upload',
-            queryParameters: queryParameters, data: _data)
-        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data!;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ImageModel>(Options(
+                method: 'POST',
+                headers: _headers,
+                extra: _extra,
+                contentType: 'multipart/form-data')
+            .compose(_dio.options, 'https://api.imgbb.com/1/upload',
+                queryParameters: queryParameters, data: _data)
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ImageModel.fromJson(_result.data!);
     return value;
   }
 
