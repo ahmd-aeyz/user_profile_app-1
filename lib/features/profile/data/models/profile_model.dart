@@ -8,10 +8,11 @@ class ProfileData {
   final String? emailVerifiedAt;
   final String? address;
   final String phone;
-  final int? age;
+  final String? age;
   final int? role;
   final String? updatedAt;
   final String? createdAt;
+  final String? password;
 
   ProfileData({
     this.id,
@@ -25,17 +26,18 @@ class ProfileData {
     this.role,
     this.updatedAt,
     this.createdAt,
+    this.password,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
         id: json['id'] as int,
         name: json['name'] as String,
         email: json['email'] as String,
-        imageUrl: json['image'] as String,
         emailVerifiedAt: json['email_verified_at'] as String?,
         address: json['address'] as String?,
         phone: json['phone'] as String,
-        age: json['age'] as int?,
+        age: json['age'] as String?,
+        imageUrl: json['image'] as String,
         role: json['role'] as int?,
         createdAt: json['created_at'] as String,
         updatedAt: json['updated_at'] as String,
@@ -64,6 +66,8 @@ class ProfileModel extends Profile {
           email: profileData.email,
           phone: profileData.phone,
           imageUrl: profileData.imageUrl!,
+          address: profileData.address,
+          age: profileData.age,
         );
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(

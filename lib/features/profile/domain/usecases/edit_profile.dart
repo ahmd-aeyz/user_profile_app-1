@@ -26,7 +26,7 @@ class EditProfileData extends Equatable {
   final String phone;
   final File? imageFile;
   final String? address;
-  final int? age;
+  final String? age;
 
   const EditProfileData({
     required this.name,

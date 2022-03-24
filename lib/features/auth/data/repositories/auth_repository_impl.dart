@@ -43,12 +43,22 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      final user = await authService.login(
+      final token = await authService.login(
         email: email,
         password: password,
       );
-      localDataSource.saveToken(user.accessToken);
-      return right(user);
+      localDataSource.saveToken(token.accessToken);
+      return right(token);
+    } catch (error) {
+      return left(Failure(error));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      localDataSource.deleteToken();
+      return right(null);
     } catch (error) {
       return left(Failure(error));
     }

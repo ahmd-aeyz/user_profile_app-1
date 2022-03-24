@@ -35,12 +35,6 @@ class ProfileItemWidget extends StatelessWidget {
             text,
             style: Theme.of(context).textTheme.headline6,
           ),
-          const Spacer(),
-          const Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 27,
-            color: Colors.grey,
-          ),
         ],
       ),
     );
