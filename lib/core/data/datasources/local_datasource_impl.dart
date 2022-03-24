@@ -16,4 +16,9 @@ class LocalDataSourceImpl implements LocalDataSource {
   String? getToken() {
     return sharedPreferences.getString('token');
   }
+
+  @override
+  void deleteToken() {
+    sharedPreferences.remove('token');
+  }
 }

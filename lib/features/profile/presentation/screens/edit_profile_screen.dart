@@ -2,44 +2,55 @@ import 'dart:io';
 import 'package:final_project/core/presentation/validation/validators.dart';
 import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
 import 'package:final_project/core/presentation/widgets/custom_text_form_field.dart';
+import 'package:final_project/features/profile/domain/entities/profile.dart';
 import 'package:final_project/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:final_project/features/profile/presentation/bloc/profile_state.dart';
+import 'package:final_project/features/profile/presentation/screens/view_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-// ignore: must_be_immutable
 class EditProfileScreen extends StatelessWidget {
-  EditProfileScreen();
+  const EditProfileScreen();
   static const routeName = 'edit_profile';
-  late TextEditingController nameController;
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
-  late TextEditingController phoneController;
-  late TextEditingController addressController;
-  late TextEditingController ageController;
-  late File? imageFile;
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)!.settings.arguments! as Profile;
+    final nameController = TextEditingController(text: user.name);
+    final emailController = TextEditingController(text: user.email);
+    final passwordController = TextEditingController();
+    final phoneController = TextEditingController(text: user.phone);
+    final addressController = TextEditingController(text: user.address);
+    final ageController = TextEditingController(text: user.age);
+    File? imageFile;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error) => Center(child: Text(error)),
-              success: (user) {
-                nameController = TextEditingController(text: user.name);
-                emailController = TextEditingController(text: user.email);
-                passwordController = TextEditingController();
-                phoneController = TextEditingController(text: user.phone);
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              if (state is ProfileSuccess) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context)
+                    .pushReplacementNamed(ViewProfileScreen.routeName);
+              }
+            },
+            builder: (context, state) {
+              return state.maybeWhen(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error) => Center(child: Text(error)),
+                // success: (user) {
+
+                //   return Container();
+                // },
+                orElse: () =>
+                    //Form(
+                    // key: _formKey,
+                    // child:
+                    Column(
                   children: [
                     ElevatedButton(
                       onPressed: () async {
@@ -80,7 +91,7 @@ class EditProfileScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       controller: addressController,
-                      hintText: 'Change job title',
+                      hintText: 'Change address',
                       keyboardType: TextInputType.name,
                       validator: (value) => generalValidator(
                         value: value,
@@ -96,30 +107,31 @@ class EditProfileScreen extends StatelessWidget {
                         value: value,
                         fieldName: 'Age',
                       ),
-                      prefixIcon: Icons.home_work_outlined,
+                      prefixIcon: Icons.manage_accounts_outlined,
                     ),
+                    const SizedBox(height: 16),
                     CustomElevatedButton(
                       label: 'submit',
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          BlocProvider.of<ProfileCubit>(context).editProfile(
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            phone: phoneController.text,
-                            imageFile: imageFile,
-                            address: addressController.text,
-                            age: int.parse(ageController.text),
-                          );
-                        }
+                        // if (_formKey.currentState!.validate()) {
+                        BlocProvider.of<ProfileCubit>(context).editProfile(
+                          name: nameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                          phone: phoneController.text,
+                          imageFile: imageFile,
+                          address: addressController.text,
+                          age: ageController.text,
+                        );
                       },
+                      //},
                     ),
                   ],
-                );
-              },
-              orElse: () => Container(),
-            );
-          },
+                ),
+                // ),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -41,15 +41,11 @@ class LoginScreen extends StatelessWidget {
               ),
               PasswordTextFormField(controller: passwordController),
               const SizedBox(height: 16),
-              BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state is AuthSuccess) {
-                    Navigator.of(context).pushReplacementNamed(
-                      ViewProfileScreen.routeName,
-                    );
-                  }
-                },
+              BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
+                  if (state is AuthSuccess) {
+                    navigateToProfile(context);
+                  }
                   return state.maybeWhen(
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
@@ -90,6 +86,13 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> navigateToProfile(BuildContext context) async {
+    await Future.delayed(const Duration(microseconds: 100));
+    Navigator.of(context).pushReplacementNamed(
+      ViewProfileScreen.routeName,
     );
   }
 }

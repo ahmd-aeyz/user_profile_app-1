@@ -6,7 +6,7 @@ class Profile extends Equatable {
   final String imageUrl;
   final String? phone;
   final String? address;
-  final int? age;
+  final String? age;
 
   const Profile({
     required this.name,

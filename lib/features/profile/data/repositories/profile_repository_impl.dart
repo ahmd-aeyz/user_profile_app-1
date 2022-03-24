@@ -39,31 +39,48 @@ class ProfileRepositoryImpl implements ProfileRepository {
         final uploadedImageUrl = await profileService.updateImage(
           image: editProfileData.imageFile!,
         );
+
         profile = await profileService.editProfile(
           token: 'Bearer $token',
           profileData: ProfileData(
             name: editProfileData.name,
             email: editProfileData.email,
             phone: editProfileData.phone,
-            imageUrl: uploadedImageUrl,
             address: editProfileData.address,
             age: editProfileData.age,
+            password: editProfileData.password,
+            imageUrl: uploadedImageUrl.url,
           ),
+          // name: editProfileData.name,
+          // email: editProfileData.email,
+          // phone: editProfileData.phone,
+          // address: editProfileData.address,
+          // age: editProfileData.age,
+          // password: editProfileData.password,
+          // imageUrl: uploadedImageUrl.url,
+        );
+      } else {
+        profile = await profileService.editProfile(
+          token: 'Bearer $token',
+          profileData: ProfileData(
+            name: editProfileData.name,
+            email: editProfileData.email,
+            phone: editProfileData.phone,
+            address: editProfileData.address,
+            age: editProfileData.age,
+            password: editProfileData.password,
+          ),
+          // name: editProfileData.name,
+          // email: editProfileData.email,
+          // phone: editProfileData.phone,
+          // address: editProfileData.address,
+          // age: editProfileData.age,
+          // password: editProfileData.password,
         );
       }
-      profile = await profileService.editProfile(
-        token: 'Bearer $token',
-        profileData: ProfileData(
-          name: editProfileData.name,
-          email: editProfileData.email,
-          phone: editProfileData.phone,
-          address: editProfileData.address,
-          age: editProfileData.age,
-        ),
-      );
       return right(profile);
     } catch (error) {
-      return left(Failure(error));
+      return left(const Failure('Network error'));
     }
   }
 }
