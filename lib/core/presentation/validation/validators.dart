@@ -34,3 +34,12 @@ String? generalValidator({
   }
   return null;
 }
+
+String? editPasswordValidator(String? password) {
+  if (password == null) {
+    return null;
+  } else if (password.isNotEmpty && password.length < 6) {
+    return "Password can't be less than 6 characters";
+  }
+  return null;
+}

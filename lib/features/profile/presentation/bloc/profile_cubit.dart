@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/usecases/usecase.dart';
 import 'package:final_project/features/profile/domain/usecases/edit_profile.dart';
 import 'package:final_project/features/profile/domain/usecases/view_profile.dart';
@@ -27,29 +28,19 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> editProfile({
-    required String name,
-    required String email,
-    required String password,
-    required String phone,
+    required User user,
     File? imageFile,
-    String? address,
-    String? age,
   }) async {
     emit(const ProfileState.loading());
     final result = await _editUseCase(
       EditProfileData(
-        name: name,
-        email: email,
-        password: password,
-        phone: phone,
+        user: user,
         imageFile: imageFile,
-        address: address,
-        age: age,
       ),
     );
     result.fold(
       (error) => emit(ProfileErrorDetails(error.toString())),
-      (profile) => emit(ProfileSuccess(profile)),
+      (user) => emit(ProfileSuccess(user)),
     );
   }
 }

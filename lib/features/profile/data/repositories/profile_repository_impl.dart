@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:final_project/core/data/models/user_mapper.dart';
+import 'package:final_project/core/data/models/user_model.dart';
 import 'package:final_project/core/domain/datasources/local_datasource.dart';
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/features/profile/data/datasources/profile_service.dart';
-import 'package:final_project/features/profile/data/models/profile_model.dart';
-import 'package:final_project/features/profile/domain/entities/profile.dart';
 import 'package:final_project/features/profile/domain/repositories/profile_repository.dart';
 import 'package:final_project/features/profile/domain/usecases/edit_profile.dart';
 import 'package:injectable/injectable.dart';
@@ -18,67 +19,46 @@ class ProfileRepositoryImpl implements ProfileRepository {
   });
 
   @override
-  Future<Either<Failure, Profile>> viewProfile() async {
+  Future<Either<Failure, User>> viewProfile() async {
     try {
       final token = localDataSource.getToken()!;
-      final profile = await profileService.viewProfile(token: 'Bearer $token');
-      return right(profile);
+      final user = await profileService.viewProfile(token: 'Bearer $token');
+      return right(user);
     } catch (error) {
       return left(Failure(error));
     }
   }
 
   @override
-  Future<Either<Failure, Profile>> editProfile(
+  Future<Either<Failure, User>> editProfile(
     EditProfileData editProfileData,
   ) async {
     try {
       final token = localDataSource.getToken()!;
-      Profile profile;
+      User user;
       if (editProfileData.imageFile != null) {
         final uploadedImageUrl = await profileService.updateImage(
           image: editProfileData.imageFile!,
         );
-
-        profile = await profileService.editProfile(
+        user = await profileService.editProfile(
           token: 'Bearer $token',
-          profileData: ProfileData(
-            name: editProfileData.name,
-            email: editProfileData.email,
-            phone: editProfileData.phone,
-            address: editProfileData.address,
-            age: editProfileData.age,
-            password: editProfileData.password,
+          userModel: UserModel(
+            name: editProfileData.user.name,
+            email: editProfileData.user.email,
+            password: editProfileData.user.password,
+            phone: editProfileData.user.phone,
             imageUrl: uploadedImageUrl.url,
+            address: editProfileData.user.address,
+            age: editProfileData.user.age,
           ),
-          // name: editProfileData.name,
-          // email: editProfileData.email,
-          // phone: editProfileData.phone,
-          // address: editProfileData.address,
-          // age: editProfileData.age,
-          // password: editProfileData.password,
-          // imageUrl: uploadedImageUrl.url,
         );
       } else {
-        profile = await profileService.editProfile(
+        user = await profileService.editProfile(
           token: 'Bearer $token',
-          profileData: ProfileData(
-            name: editProfileData.name,
-            email: editProfileData.email,
-            phone: editProfileData.phone,
-            address: editProfileData.address,
-            age: editProfileData.age,
-            password: editProfileData.password,
-          ),
-          // name: editProfileData.name,
-          // email: editProfileData.email,
-          // phone: editProfileData.phone,
-          // address: editProfileData.address,
-          // age: editProfileData.age,
-          // password: editProfileData.password,
+          userModel: editProfileData.user.toModel(),
         );
       }
-      return right(profile);
+      return right(user);
     } catch (error) {
       return left(const Failure('Network error'));
     }
