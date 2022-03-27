@@ -4,9 +4,11 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     required this.label,
     required this.onPressed,
+    required this.isLoading,
   });
   final String label;
   final void Function() onPressed;
+  final bool isLoading;
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -22,7 +24,11 @@ class CustomElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Text(label.toUpperCase()),
+      child: isLoading
+          ? const CircularProgressIndicator(
+              color: Colors.black,
+            )
+          : Text(label.toUpperCase()),
     );
   }
 }

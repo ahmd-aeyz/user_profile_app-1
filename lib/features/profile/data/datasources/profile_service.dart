@@ -21,13 +21,6 @@ abstract class ProfileService {
   Future<ProfileModel> editProfile({
     @Header('Authorization') required String token,
     @Body() required ProfileData profileData,
-    // @Query('name') String? name,
-    // @Query('email') String? email,
-    // @Query('password') String? password,
-    // @Query('phone') String? phone,
-    // @Query('address') String? address,
-    // @Query('age') String? age,
-    // @Query('image') String? imageUrl,
   });
 
   @POST('https://api.imgbb.com/1/upload')

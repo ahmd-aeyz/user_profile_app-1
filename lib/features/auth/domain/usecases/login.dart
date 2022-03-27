@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:final_project/core/data/model/user_model.dart';
+import 'package:final_project/core/data/model/token.dart';
 import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/core/domain/usecases/usecase.dart';
 import 'package:final_project/features/auth/domain/repositories/auth_repository.dart';

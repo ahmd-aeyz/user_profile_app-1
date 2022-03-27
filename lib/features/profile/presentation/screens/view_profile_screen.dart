@@ -10,20 +10,9 @@ import 'package:final_project/features/profile/presentation/widgets/profile_item
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ViewProfileScreen extends StatefulWidget {
+class ViewProfileScreen extends StatelessWidget {
   const ViewProfileScreen();
   static const routeName = 'view_profile';
-  @override
-  State<ViewProfileScreen> createState() => _ViewProfileScreenState();
-}
-
-class _ViewProfileScreenState extends State<ViewProfileScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<ProfileCubit>(context).viewProfile();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +30,12 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           return state.maybeWhen(
+            initial: () {
+              WidgetsBinding.instance!.addPostFrameCallback(
+                (_) => BlocProvider.of<ProfileCubit>(context).viewProfile(),
+              );
+              return Container();
+            },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error) => Center(child: Text(error)),
             success: (user) {
@@ -79,6 +74,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                         EditProfileScreen.routeName,
                         arguments: user,
                       ),
+                      isLoading: false,
                     ),
                   ),
                 ],

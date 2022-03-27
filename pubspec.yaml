@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
+  fluttertoast: ^8.0.9
   freezed: ^1.1.1
   freezed_annotation: ^1.1.0
   get_it: ^7.2.0
