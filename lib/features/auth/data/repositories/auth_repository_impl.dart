@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/core/data/model/user_model.dart';
+import 'package:final_project/core/data/model/token.dart';
 import 'package:final_project/core/domain/datasources/local_datasource.dart';
 import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/features/auth/data/datasources/auth_service.dart';

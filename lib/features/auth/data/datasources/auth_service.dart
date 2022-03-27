@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:final_project/core/data/model/user_model.dart';
+import 'package:final_project/core/data/model/token.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 part 'auth_service.g.dart';

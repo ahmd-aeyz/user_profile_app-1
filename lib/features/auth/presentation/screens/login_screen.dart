@@ -1,3 +1,4 @@
+import 'package:final_project/core/domain/error/error_toast.dart';
 import 'package:final_project/core/presentation/validation/validators.dart';
 import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
 import 'package:final_project/core/presentation/widgets/custom_text_form_field.dart';
@@ -43,28 +44,29 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-                  if (state is AuthSuccess) {
-                    navigateToProfile(context);
-                  }
-                  return state.maybeWhen(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error) => Center(
-                      child: Text(error),
+                  bool isLoading = false;
+                  state.maybeWhen(
+                    loading: () => isLoading = true,
+                    error: (error) => showErrorToast(errorMessage: error),
+                    success: () =>
+                        WidgetsBinding.instance!.addPostFrameCallback(
+                      (_) => Navigator.of(context).pushReplacementNamed(
+                        ViewProfileScreen.routeName,
+                      ),
                     ),
-                    orElse: () {
-                      return CustomElevatedButton(
-                        label: 'login',
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            BlocProvider.of<AuthCubit>(context).login(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-                          }
-                        },
-                      );
+                    orElse: () {},
+                  );
+                  return CustomElevatedButton(
+                    label: 'login',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        BlocProvider.of<AuthCubit>(context).login(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                      }
                     },
+                    isLoading: isLoading,
                   );
                 },
               ),
@@ -86,13 +88,6 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> navigateToProfile(BuildContext context) async {
-    await Future.delayed(const Duration(microseconds: 100));
-    Navigator.of(context).pushReplacementNamed(
-      ViewProfileScreen.routeName,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:final_project/core/domain/error/error_toast.dart';
 import 'package:final_project/core/presentation/validation/validators.dart';
 import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
 import 'package:final_project/core/presentation/widgets/custom_text_form_field.dart';
@@ -60,29 +61,30 @@ class RegisterScreen extends StatelessWidget {
                 validator: (value) => phoneValidator(value),
               ),
               const SizedBox(height: 16),
-              BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state is AuthSuccess) {
-                    Navigator.of(context).pushReplacementNamed(
-                      ViewProfileScreen.routeName,
-                    );
-                  }
-                },
+              BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-                  return state.maybeWhen(
-                    orElse: () => CustomElevatedButton(
-                      label: 'register',
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          BlocProvider.of<AuthCubit>(context).register(
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            phone: phoneController.text,
-                          );
-                        }
-                      },
+                  bool isLoading = false;
+                  state.maybeWhen(
+                    loading: () => isLoading = true,
+                    error: (error) => showErrorToast(errorMessage: error),
+                    success: () => Navigator.of(context).pushReplacementNamed(
+                      ViewProfileScreen.routeName,
                     ),
+                    orElse: () {},
+                  );
+                  return CustomElevatedButton(
+                    label: 'register',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        BlocProvider.of<AuthCubit>(context).register(
+                          name: nameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                          phone: phoneController.text,
+                        );
+                      }
+                    },
+                    isLoading: isLoading,
                   );
                 },
               ),
