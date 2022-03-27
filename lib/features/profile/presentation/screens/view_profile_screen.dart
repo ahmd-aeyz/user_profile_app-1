@@ -54,15 +54,15 @@ class ViewProfileScreen extends StatelessWidget {
                     icon: Icons.email_outlined,
                   ),
                   ProfileItemWidget(
-                    text: user.phone ?? '',
+                    text: user.phone,
                     icon: Icons.phone_outlined,
                   ),
                   ProfileItemWidget(
-                    text: user.address ?? '',
+                    text: user.address,
                     icon: Icons.home_work_outlined,
                   ),
                   ProfileItemWidget(
-                    text: user.age ?? '',
+                    text: user.age,
                     icon: Icons.manage_accounts_outlined,
                   ),
                   const SizedBox(height: 20),

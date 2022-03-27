@@ -1,3 +1,4 @@
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/error/error_toast.dart';
 import 'package:final_project/core/presentation/validation/validators.dart';
 import 'package:final_project/core/presentation/widgets/custom_elevated_button.dart';
@@ -67,8 +68,11 @@ class RegisterScreen extends StatelessWidget {
                   state.maybeWhen(
                     loading: () => isLoading = true,
                     error: (error) => showErrorToast(errorMessage: error),
-                    success: () => Navigator.of(context).pushReplacementNamed(
-                      ViewProfileScreen.routeName,
+                    success: () =>
+                        WidgetsBinding.instance!.addPostFrameCallback(
+                      (_) => Navigator.of(context).pushReplacementNamed(
+                        ViewProfileScreen.routeName,
+                      ),
                     ),
                     orElse: () {},
                   );
@@ -77,10 +81,15 @@ class RegisterScreen extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         BlocProvider.of<AuthCubit>(context).register(
-                          name: nameController.text,
-                          email: emailController.text,
-                          password: passwordController.text,
-                          phone: phoneController.text,
+                          user: User(
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            imageUrl: '',
+                            phone: phoneController.text,
+                            address: '',
+                            age: '',
+                          ),
                         );
                       }
                     },

@@ -1,19 +1,12 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/core/data/model/token.dart';
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/error/failure.dart';
+import 'package:final_project/features/auth/domain/entities/login_entity.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, Token>> register({
-    required String email,
-    required String name,
-    required String password,
-    required String phone,
-  });
+  Future<Either<Failure, Unit>> register({required User user});
 
-  Future<Either<Failure, Token>> login({
-    required String email,
-    required String password,
-  });
+  Future<Either<Failure, Unit>> login({required LoginEntity loginEntity});
 
-  Future<Either<Failure, void>> logout();
+  Future<Either<Failure, Unit>> logout();
 }

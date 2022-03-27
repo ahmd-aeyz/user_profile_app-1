@@ -1,44 +1,32 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:final_project/core/data/model/token.dart';
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/core/domain/usecases/usecase.dart';
 import 'package:final_project/features/auth/domain/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class Register implements UseCase<Token, RegisterData> {
+class Register implements UseCase<Unit, RegisterData> {
   AuthRepository authRepository;
   Register(this.authRepository);
 
   @override
-  Future<Either<Failure, Token>> call(RegisterData registerData) async =>
+  Future<Either<Failure, Unit>> call(RegisterData registerData) async =>
       authRepository.register(
-        email: registerData.email,
-        name: registerData.name,
-        phone: registerData.phone,
-        password: registerData.password,
+        user: registerData.user,
       );
 }
 
 class RegisterData extends Equatable {
-  final String name;
-  final String email;
-  final String password;
-  final String phone;
+  final User user;
 
   const RegisterData({
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.phone,
+    required this.user,
   });
 
   @override
   List<Object?> get props => [
-        name,
-        email,
-        password,
-        phone,
+        user,
       ];
 }
