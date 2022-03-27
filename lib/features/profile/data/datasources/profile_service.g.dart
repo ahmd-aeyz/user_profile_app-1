@@ -16,38 +16,37 @@ class _ProfileService implements ProfileService {
   String? baseUrl;
 
   @override
-  Future<ProfileModel> viewProfile({required token}) async {
+  Future<UserModel> viewProfile({required token}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ProfileModel>(
+        _setStreamType<UserModel>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'user',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ProfileModel.fromJson(_result.data!);
+    final value = UserModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<ProfileModel> editProfile(
-      {required token, required profileData}) async {
+  Future<UserModel> editProfile({required token, required userModel}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(profileData.toJson());
+    _data.addAll(userModel.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ProfileModel>(
+        _setStreamType<UserModel>(
             Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'edit_user',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ProfileModel.fromJson(_result.data!);
+    final value = UserModel.fromJson(_result.data!);
     return value;
   }
 

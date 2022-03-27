@@ -1,4 +1,6 @@
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/usecases/usecase.dart';
+import 'package:final_project/features/auth/domain/entities/login_entity.dart';
 import 'package:final_project/features/auth/domain/usecases/login.dart';
 import 'package:final_project/features/auth/domain/usecases/logout.dart';
 import 'package:final_project/features/auth/domain/usecases/register.dart';
@@ -17,27 +19,17 @@ class AuthCubit extends Cubit<AuthState> {
   final Login _loginUseCase;
   final Logout _logout;
 
-  Future<void> register({
-    required String name,
-    required String email,
-    required String password,
-    required String phone,
-  }) async {
+  Future<void> register({required User user}) async {
     emit(const AuthLoading());
     final result = await _registerUserCase(
       RegisterData(
-        name: name,
-        email: email,
-        password: password,
-        phone: phone,
+        user: user,
       ),
     );
     emit(
       result.fold(
         (error) => AuthErrorDetails(error.toString()),
-        (user) {
-          return const AuthSuccess();
-        },
+        (_) => const AuthSuccess(),
       ),
     );
   }
@@ -49,16 +41,16 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthLoading());
     final result = await _loginUseCase(
       LoginData(
-        email: email,
-        password: password,
+        loginEntity: LoginEntity(
+          email: email,
+          password: password,
+        ),
       ),
     );
     emit(
       result.fold(
         (error) => const AuthErrorDetails('Network error'),
-        (user) {
-          return const AuthSuccess();
-        },
+        (_) => const AuthSuccess(),
       ),
     );
   }
@@ -69,9 +61,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(
       result.fold(
         (error) => const AuthErrorDetails('Network error'),
-        (_) {
-          return const AuthSuccess();
-        },
+        (_) => const AuthSuccess(),
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/core/data/model/token.dart';
+import 'package:final_project/core/data/models/user_mapper.dart';
 import 'package:final_project/core/domain/datasources/local_datasource.dart';
+import 'package:final_project/core/domain/entities/user.dart';
 import 'package:final_project/core/domain/error/failure.dart';
 import 'package:final_project/features/auth/data/datasources/auth_service.dart';
+import 'package:final_project/features/auth/data/models/login_mapper.dart';
+import 'package:final_project/features/auth/domain/entities/login_entity.dart';
 import 'package:final_project/features/auth/domain/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,49 +19,38 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<Either<Failure, Token>> register({
-    required String email,
-    required String name,
-    required String phone,
-    required String password,
+  Future<Either<Failure, Unit>> register({
+    required User user,
   }) async {
     try {
-      final token = await authService.register(
-        name: name,
-        email: email,
-        password: password,
-        passwordConfirmation: password,
-        phone: phone,
-      );
-      localDataSource.saveToken(token.accessToken);
-      return right(token);
+      final token = await authService.register(userModel: user.toModel());
+      localDataSource.saveToken(token.token);
+      return right(unit);
     } catch (error) {
       return left(Failure(error));
     }
   }
 
   @override
-  Future<Either<Failure, Token>> login({
-    required String email,
-    required String password,
+  Future<Either<Failure, Unit>> login({
+    required LoginEntity loginEntity,
   }) async {
     try {
       final token = await authService.login(
-        email: email,
-        password: password,
+        loginModel: loginEntity.toModel(),
       );
-      localDataSource.saveToken(token.accessToken);
-      return right(token);
+      localDataSource.saveToken(token.token);
+      return right(unit);
     } catch (error) {
       return left(Failure(error));
     }
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<Either<Failure, Unit>> logout() async {
     try {
       localDataSource.deleteToken();
-      return right(null);
+      return right(unit);
     } catch (error) {
       return left(Failure(error));
     }

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:final_project/core/data/models/user_model.dart';
 import 'package:final_project/features/profile/data/models/image_model.dart';
-import 'package:final_project/features/profile/data/models/profile_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 part 'profile_service.g.dart';
@@ -13,14 +13,14 @@ abstract class ProfileService {
   factory ProfileService(Dio dio) = _ProfileService;
 
   @GET('user')
-  Future<ProfileModel> viewProfile({
+  Future<UserModel> viewProfile({
     @Header('Authorization') required String token,
   });
 
   @POST('edit_user')
-  Future<ProfileModel> editProfile({
+  Future<UserModel> editProfile({
     @Header('Authorization') required String token,
-    @Body() required ProfileData profileData,
+    @Body() required UserModel userModel,
   });
 
   @POST('https://api.imgbb.com/1/upload')

@@ -16,48 +16,36 @@ class _AuthService implements AuthService {
   String? baseUrl;
 
   @override
-  Future<Token> register(
-      {required name,
-      required email,
-      required password,
-      required passwordConfirmation,
-      required phone}) async {
+  Future<TokenModel> register({required userModel}) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'name': name,
-      r'email': email,
-      r'password': password,
-      r'password_confirmation': passwordConfirmation,
-      r'phone': phone
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
+    _data.addAll(userModel.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<Token>(
+        _setStreamType<TokenModel>(
             Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'register',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Token.fromJson(_result.data!);
+    final value = TokenModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<Token> login({required email, required password}) async {
+  Future<TokenModel> login({required loginModel}) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'email': email,
-      r'password': password
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
+    _data.addAll(loginModel.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<Token>(
+        _setStreamType<TokenModel>(
             Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'login',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Token.fromJson(_result.data!);
+    final value = TokenModel.fromJson(_result.data!);
     return value;
   }
 
