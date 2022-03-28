@@ -1,5 +1,7 @@
 Simple flutter app with authentication and edit profile
+
 Practice clean Architecture (TDD)
+
 API: https://github.com/artscss/api_sanctum_package
 
 Features:
