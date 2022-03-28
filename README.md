@@ -13,16 +13,16 @@ Edit profile
 
 Packages:
 
-dartz
-dio
-equatable
-flutter_bloc
-fluttertoast
-freezed
-freezed_annotation
-get_it
-image_picker
-injectable
-intl
-retrofit
-shared_preferences
+dartz,
+dio,
+equatable,
+flutter_bloc,
+fluttertoast,
+freezed,
+freezed_annotation,
+get_it,
+image_picker,
+injectable,
+intl,
+retrofit,
+shared_preferences,
