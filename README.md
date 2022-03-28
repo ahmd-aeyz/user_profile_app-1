@@ -25,4 +25,4 @@ image_picker,
 injectable,
 intl,
 retrofit,
-shared_preferences,
+shared_preferences.
